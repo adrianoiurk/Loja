@@ -1,7 +1,6 @@
 package br.com.empresa.loja.controller;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public class CampanhaController {
 		@GetMapping
 		@ApiOperation(value = "Retorna a lista de campanhas Ativas - listarCampanha().")
 		public List<Campanha> listarCampanhas(){
-			return campanhaService.listarCampanhasAtivas(LocalDate.now());
+			return campanhaService.listarCampanhasAtivas();
 		}
 		
 		@GetMapping("/{id}")
@@ -86,7 +85,6 @@ public class CampanhaController {
 			}
 			
 			return ResponseEntity.notFound().build();
-			
 		}
 		
 		@DeleteMapping("/{id}")
@@ -99,9 +97,6 @@ public class CampanhaController {
 				campanhaService.remover(id);
 				return ResponseEntity.ok().build();
 			}
-			
 			return ResponseEntity.notFound().build();
-			
 		}	
-
 }

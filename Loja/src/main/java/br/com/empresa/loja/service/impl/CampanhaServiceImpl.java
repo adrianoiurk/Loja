@@ -77,9 +77,9 @@ public class CampanhaServiceImpl implements CampanhaService {
 	}
 
 	@Override
-	public List<Campanha> listarCampanhasAtivas(LocalDate dataAtual) {
+	public List<Campanha> listarCampanhasAtivas() {
 		
-		return campanhaRepository.findAllWithDataFimVigenciaAfter(dataAtual);
+		return campanhaRepository.findAllWithDataFimVigenciaAfter(LocalDate.now());
 	}
 	
 	private Campanha somarUmDiaDataFimVigencia(Campanha campanha) {
