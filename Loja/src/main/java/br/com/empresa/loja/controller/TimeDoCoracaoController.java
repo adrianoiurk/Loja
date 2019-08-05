@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.empresa.loja.model.TimeDoCoracao;
-import br.com.empresa.loja.repository.TimeDoCoracaoRepository;
+import br.com.empresa.loja.service.TimeDoCoracaoService;
 import io.swagger.annotations.Api;
 
 @RestController
@@ -30,17 +30,17 @@ import io.swagger.annotations.Api;
 public class TimeDoCoracaoController {
 	
 	@Autowired
-	private TimeDoCoracaoRepository timeDoCoracaoRepository;
+	private TimeDoCoracaoService timeDoCoracaoService;
 	
 	@GetMapping
 	public List<TimeDoCoracao> listarTimeDoCoracaos(){
-		return timeDoCoracaoRepository.findAll();
+		return timeDoCoracaoService.listarTodos();
 	}
 	
 	@PostMapping
 	public ResponseEntity<TimeDoCoracao> cadastrarTimeDoCoracao(@RequestBody @Valid TimeDoCoracao timeDoCoracao, UriComponentsBuilder uriBuilder){
 		
-		timeDoCoracaoRepository.save(timeDoCoracao);
+		timeDoCoracaoService.cadastrar(timeDoCoracao);
 		URI uri = uriBuilder.path("/timeDoCoracao/{id}").buildAndExpand(timeDoCoracao.getId()).toUri();
 		
 		return ResponseEntity.created(uri).body(timeDoCoracao);
@@ -49,7 +49,7 @@ public class TimeDoCoracaoController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<TimeDoCoracao> listarPorId(@PathVariable String id){
-		Optional<TimeDoCoracao> optTimeDoCoracao = timeDoCoracaoRepository.findById(id);
+		Optional<TimeDoCoracao> optTimeDoCoracao = timeDoCoracaoService.listarPorId(id);
 		
 		if(optTimeDoCoracao.isPresent()) {
 			return ResponseEntity.ok(optTimeDoCoracao.get());
@@ -60,10 +60,10 @@ public class TimeDoCoracaoController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<TimeDoCoracao> atualizarTimeDoCoracao(@PathVariable String id, @RequestBody @Valid TimeDoCoracao timeDoCoracao){
-		Optional<TimeDoCoracao> optTimeDoCoracao = timeDoCoracaoRepository.findById(id);
+		Optional<TimeDoCoracao> optTimeDoCoracao = timeDoCoracaoService.listarPorId(id);
 		
 		if(optTimeDoCoracao.isPresent()) {
-			timeDoCoracaoRepository.save(timeDoCoracao);
+			timeDoCoracaoService.atualizar(id, timeDoCoracao);
 			return ResponseEntity.ok(timeDoCoracao);
 		}
 		
@@ -73,10 +73,10 @@ public class TimeDoCoracaoController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> remover(@PathVariable String id) {
-		Optional<TimeDoCoracao> optTimeDoCoracao = timeDoCoracaoRepository.findById(id);
+		Optional<TimeDoCoracao> optTimeDoCoracao = timeDoCoracaoService.listarPorId(id);
 		
 		if(optTimeDoCoracao.isPresent()) {
-			timeDoCoracaoRepository.deleteById(id);
+			timeDoCoracaoService.remover(id);
 			return ResponseEntity.ok().build();
 		}
 		

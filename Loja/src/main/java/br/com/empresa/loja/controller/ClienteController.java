@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.empresa.loja.model.Cliente;
-import br.com.empresa.loja.repository.ClienteRepository;
+import br.com.empresa.loja.model.ClienteCampanha;
+import br.com.empresa.loja.service.ClienteCampanhaService;
+import br.com.empresa.loja.service.ClienteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -31,19 +33,21 @@ import io.swagger.annotations.ApiOperation;
 public class ClienteController {
 	
 	@Autowired
-	private ClienteRepository clienteRepository;
+	private ClienteService clienteService;
+	@Autowired
+	private ClienteCampanhaService clienteCampanhaService;
 	
 	@GetMapping
 	@ApiOperation(value = "Retorna a lista de clientes - listarClientes().")
 	public List<Cliente> listarClientes(){
-		return clienteRepository.findAll();
+		return clienteService.listarTodos();
 	}
 	
 	@PostMapping
 	@ApiOperation(value = "Cadastra um cliente - cadastrarCliente().")
 	public ResponseEntity<Cliente> cadastrarCliente(@RequestBody @Valid Cliente cliente, UriComponentsBuilder uriBuilder){
 		
-		clienteRepository.save(cliente);
+		clienteService.cadastrar(cliente);
 		URI uri = uriBuilder.path("/clientes/{id}").buildAndExpand(cliente.getId()).toUri();
 		
 		return ResponseEntity.created(uri).body(cliente);
@@ -53,7 +57,7 @@ public class ClienteController {
 	@GetMapping("/{id}")
 	@ApiOperation(value = "Lista um cliente - listarPorId().")
 	public ResponseEntity<Cliente> listarPorId(@PathVariable String id){
-		Optional<Cliente> optCliente = clienteRepository.findById(id);
+		Optional<Cliente> optCliente = clienteService.listarPorId(id);
 		
 		if(optCliente.isPresent()) {
 			return ResponseEntity.ok(optCliente.get());
@@ -65,10 +69,10 @@ public class ClienteController {
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Atualiza um cliente - atualizarCliente().")
 	public ResponseEntity<Cliente> atualizarCliente(@PathVariable String id, @RequestBody @Valid Cliente cliente){
-		Optional<Cliente> optCliente = clienteRepository.findById(id);
+		Optional<Cliente> optCliente = clienteService.listarPorId(id);
 		
 		if(optCliente.isPresent()) {
-			clienteRepository.save(cliente);
+			clienteService.atualizar(id, cliente);
 			return ResponseEntity.ok(cliente);
 		}
 		
@@ -79,10 +83,40 @@ public class ClienteController {
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Remove um cliente - remover().")
 	public ResponseEntity<?> remover(@PathVariable String id) {
-		Optional<Cliente> optCliente = clienteRepository.findById(id);
+		Optional<Cliente> optCliente = clienteService.listarPorId(id);
 		
 		if(optCliente.isPresent()) {
-			clienteRepository.deleteById(id);
+			clienteService.remover(id);
+			return ResponseEntity.ok().build();
+		}
+		
+		return ResponseEntity.notFound().build();
+		
+	}	
+	
+	@PostMapping(path="/clienteCampanhas/")
+	@ApiOperation(value = "Cadastra uma associação de cliente e campanha - cadastrarClienteCampanha().")
+	public ResponseEntity<List<ClienteCampanha>> cadastrarClienteCampanha(@RequestBody Cliente cliente, UriComponentsBuilder uriBuilder){
+		
+		List<ClienteCampanha> clienteCampanha = clienteCampanhaService.cadastrar(cliente);
+		URI uri = uriBuilder.path("/clienteCampanhas/{id}").buildAndExpand(clienteCampanha).toUri();
+		
+		return ResponseEntity.created(uri).body(clienteCampanha);
+	}
+	
+	@GetMapping(path="/clienteCampanhas/")
+	@ApiOperation(value = "Retorna a lista de associação de clientes e campanhas - listarClienteCampanhas().")
+	public List<ClienteCampanha> listarClienteCampanhas(){
+		return clienteCampanhaService.listarTodas();
+	}
+	
+	@DeleteMapping("/clienteCampanhas/{id}")
+	@ApiOperation(value = "Remove uma associação de cliente e campanha - remover().")
+	public ResponseEntity<?> removerClienteCampanha(@PathVariable String id) {
+		Optional<ClienteCampanha> optClienteCampanha = clienteCampanhaService.listarPorId(id);
+		
+		if(optClienteCampanha.isPresent()) {
+			clienteCampanhaService.remover(id);
 			return ResponseEntity.ok().build();
 		}
 		

@@ -44,7 +44,6 @@ public class ErroDeValidacaoHandler {
 	@ExceptionHandler({MongoWriteException.class})
 	public List<ErroDeFormulario> handleMongoWrite(MongoWriteException exception) {
 		List<ErroDeFormulario> dto = new ArrayList<>();
-		System.out.println(exception.getCode());
 		ErroDeFormulario erro;
 		if(exception.getCode() == DUPLICATED_KEY_CODE) {
 			erro = new ErroDeFormulario(EMAIL, MSG_EMAIL_DUPLICADO);

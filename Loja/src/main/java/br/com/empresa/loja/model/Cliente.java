@@ -1,11 +1,11 @@
 package br.com.empresa.loja.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.time.LocalDate;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,21 +13,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Cliente {
 	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id 
 	private String id;
 	private String nome;
 	
 	@NotEmpty
-    @Indexed(unique = true)
     @Email
+    @Indexed(unique = true)
 	private String email;
-	private String dataNascimento;
-	private Long idTimeDoCoracao;
+	private LocalDate dataNascimento;
+	private String idTimeDoCoracao;
 	
-	public Long getIdTimeDoCoracao() {
+	public String getIdTimeDoCoracao() {
 		return idTimeDoCoracao;
 	}
-	public void setIdTimeDoCoracao(Long idTimeDoCoracao) {
+	public void setIdTimeDoCoracao(String idTimeDoCoracao) {
 		this.idTimeDoCoracao = idTimeDoCoracao;
 	}
 	public String getId() {
@@ -48,10 +48,10 @@ public class Cliente {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
-	public void setDataNascimento(String dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -59,7 +59,6 @@ public class Cliente {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
@@ -72,11 +71,6 @@ public class Cliente {
 		if (getClass() != obj.getClass())
 			return false;
 		Cliente other = (Cliente) obj;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -84,5 +78,6 @@ public class Cliente {
 			return false;
 		return true;
 	}
+
 
 }

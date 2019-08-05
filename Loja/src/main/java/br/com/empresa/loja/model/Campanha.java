@@ -1,22 +1,19 @@
 package br.com.empresa.loja.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Campanha {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
 	private String id;
 	private String nome;
 	private String idTimeDoCoracao;
-	private LocalDateTime dataIniVigencia;
-	private LocalDateTime dataFimVigencia;
+	private LocalDate dataIniVigencia;
+	private LocalDate dataFimVigencia;
 	
 	public String getId() {
 		return id;
@@ -36,16 +33,16 @@ public class Campanha {
 	public void setIdTimeDoCoracao(String idTimeDoCoracao) {
 		this.idTimeDoCoracao = idTimeDoCoracao;
 	}
-	public LocalDateTime getDataIniVigencia() {
+	public LocalDate getDataIniVigencia() {
 		return dataIniVigencia;
 	}
-	public void setDataIniVigencia(LocalDateTime dataIniVigencia) {
+	public void setDataIniVigencia(LocalDate dataIniVigencia) {
 		this.dataIniVigencia = dataIniVigencia;
 	}
-	public LocalDateTime getDataFimVigencia() {
+	public LocalDate getDataFimVigencia() {
 		return dataFimVigencia;
 	}
-	public void setDataFimVigencia(LocalDateTime dataFimVigencia) {
+	public void setDataFimVigencia(LocalDate dataFimVigencia) {
 		this.dataFimVigencia = dataFimVigencia;
 	}
 	
@@ -71,6 +68,7 @@ public class Campanha {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+		
 	}
-	
+
 }

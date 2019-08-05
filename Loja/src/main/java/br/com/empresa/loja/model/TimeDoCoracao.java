@@ -1,15 +1,12 @@
 package br.com.empresa.loja.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class TimeDoCoracao {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id 
 	private String id;
 	
 	private String nome;
